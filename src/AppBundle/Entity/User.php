@@ -33,9 +33,9 @@ class User implements AdvancedUserInterface, Serializable
     private $password;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -43,9 +43,10 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * Set username
+     * Set username.
      *
      * @param string $username
+     *
      * @return User
      */
     public function setUsername($username)
@@ -56,7 +57,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUsername()
     {
@@ -64,9 +65,10 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
+     *
      * @return User
      */
     public function setPassword($password)
@@ -79,7 +81,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPassword()
     {
@@ -87,7 +89,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getSalt()
     {
@@ -95,22 +97,22 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getRoles()
     {
-        return ['ROLE_USER',];
+        return ['ROLE_USER'];
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function eraseCredentials()
     {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isAccountNonExpired()
     {
@@ -118,7 +120,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isAccountNonLocked()
     {
@@ -126,7 +128,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isCredentialsNonExpired()
     {
@@ -134,7 +136,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isEnabled()
     {
@@ -142,7 +144,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function serialize()
     {
@@ -154,10 +156,10 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function unserialize($serialized)
     {
-        list ($this->id, $this->username, $this->password,) = unserialize($serialized);
+        list($this->id, $this->username, $this->password) = unserialize($serialized);
     }
 }
