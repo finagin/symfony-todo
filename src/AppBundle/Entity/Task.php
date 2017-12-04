@@ -256,7 +256,7 @@ class Task implements Serializable, \JsonSerializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function jsonSerialize()
     {
