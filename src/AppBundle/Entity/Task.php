@@ -116,20 +116,6 @@ class Task implements Serializable
     }
 
     /**
-     * Set lft.
-     *
-     * @param int $lft
-     *
-     * @return Task
-     */
-    public function setLft($lft)
-    {
-        $this->lft = $lft;
-
-        return $this;
-    }
-
-    /**
      * Get lft.
      *
      * @return int
@@ -140,20 +126,6 @@ class Task implements Serializable
     }
 
     /**
-     * Set lvl.
-     *
-     * @param int $lvl
-     *
-     * @return Task
-     */
-    public function setLvl($lvl)
-    {
-        $this->lvl = $lvl;
-
-        return $this;
-    }
-
-    /**
      * Get lvl.
      *
      * @return int
@@ -161,20 +133,6 @@ class Task implements Serializable
     public function getLvl()
     {
         return $this->lvl;
-    }
-
-    /**
-     * Set rgt.
-     *
-     * @param int $rgt
-     *
-     * @return Task
-     */
-    public function setRgt($rgt)
-    {
-        $this->rgt = $rgt;
-
-        return $this;
     }
 
     /**
@@ -209,20 +167,6 @@ class Task implements Serializable
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set root.
-     *
-     * @param \AppBundle\Entity\Task $root
-     *
-     * @return Task
-     */
-    public function setRoot(\AppBundle\Entity\Task $root = null)
-    {
-        $this->root = $root;
-
-        return $this;
     }
 
     /**

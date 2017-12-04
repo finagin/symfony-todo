@@ -2,6 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Task;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcherInterface;
@@ -51,14 +55,12 @@ class TaskController extends FOSRestController
      *
      * @Route("tasks.json")
      * @Method("POST")
+     * @RequestParam(name="title", description="Название.")
+     * @RequestParam(name="parent", requirements="(\d+)", strict=false, nullable=false, description="Родительская задача.")
      *
      * @ApiDoc(
      *   section = "Task",
      *   resource = true,
-     *   parameters = {
-     *     {"name"="title", "dataType"="string", "required"=true, "description"="Название."},
-     *     {"name"="parent", "dataType"="integer", "required"=false, "description"="Родительская задача."}
-     *   },
      *   statusCodes = {
      *     200 = "Returned when successful.",
      *     400 = "Некорректный запрос. Некорректные входные параметры.",
@@ -74,7 +76,31 @@ class TaskController extends FOSRestController
      */
     public function storeAction(ParamFetcherInterface $paramFetcher)
     {
-        return new JsonResponse(array('data' => 'Success!'));
+        $manager = $this->getDoctrine()
+            ->getManager();
+
+        $title = $paramFetcher->get('title');
+        $parent = $paramFetcher->get('parent');
+
+        $task = new Task();
+        $task->setUser($this->getUser());
+        $task->setTitle($title);
+        if (! empty($parent)) {
+            $parent_id = $parent;
+            $parent = $manager->getRepository(Task::class)
+                ->find($parent_id);
+
+            if (is_null($parent)) {
+                throw new BadRequestHttpException('Parent with id "'.$parent_id.'" not found');
+            }
+
+            $task->setParent($parent);
+        }
+
+        $manager->persist($task);
+        $manager->flush();
+
+        return new JsonResponse(['response' => ['id' => $task->getId()]]);
     }
 
     /**
