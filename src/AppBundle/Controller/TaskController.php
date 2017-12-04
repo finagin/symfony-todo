@@ -15,6 +15,41 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class TaskController extends FOSRestController
 {
     /**
+     * List all tasks.
+     *
+     * @Route("tasks.json")
+     * @Method("GET")
+     * @Annotations\QueryParam(name="offset", requirements="\d+", default="0", nullable=true, description="Offset from which to start listing notes.")
+     * @Annotations\QueryParam(name="limit", requirements="\d+", default="100", nullable=true, description="How many notes to return.")
+     *
+     * @ApiDoc(
+     *   section = "Task",
+     *   resource = true,
+     *   statusCodes = {
+     *     200 = "Returned when successful.",
+     *     400 = "Некорректный запрос. Некорректные входные параметры.",
+     *     403 = "Доступ запрещен.",
+     *   }
+     * )
+     *
+     * @param ParamFetcherInterface $paramFetcher param fetcher service
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function indexAction(ParamFetcherInterface $paramFetcher)
+    {
+        $manager = $this->getDoctrine()->getManager();
+
+        $offset = $paramFetcher->get('offset');
+        $limit = $paramFetcher->get('limit');
+
+        $tasks = $manager->getRepository(Task::class)
+            ->findBy([], null, $limit, $offset);
+
+        return new JsonResponse(['response' => $tasks]);
+    }
+
+    /**
      * Store task.
      *
      * @Route("tasks.json")
