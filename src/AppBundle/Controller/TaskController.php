@@ -93,7 +93,7 @@ class TaskController extends FOSRestController
 
             if (is_null($parent)) {
                 throw new BadRequestHttpException('Parent with id "'.$parent_id.'" not found');
-            } elseif (! is_null($parent->getUser()) && $parent->getUser()->getId() !== $this->getUser()->getId()) {
+            } elseif (!is_null($parent->getUser()) && $parent->getUser()->getId() !== $this->getUser()->getId()) {
                 throw new BadRequestHttpException('Доступ запрещен.', 403);
             }
 
@@ -143,7 +143,7 @@ class TaskController extends FOSRestController
 
         if (is_null($task)) {
             throw new BadRequestHttpException('Task with id "'.$id.'" not found', 404);
-        } elseif (! is_null($task->getUser()) && $task->getUser()->getId() !== $this->getUser()->getId()) {
+        } elseif (!is_null($task->getUser()) && $task->getUser()->getId() !== $this->getUser()->getId()) {
             throw new BadRequestHttpException('Доступ запрещен.', 403);
         }
 
@@ -155,7 +155,7 @@ class TaskController extends FOSRestController
 
             if (is_null($parent)) {
                 throw new BadRequestHttpException('Parent with id "'.$parent_id.'" not found');
-            } elseif (! is_null($parent->getUser()) && $parent->getUser()->getId() !== $this->getUser()->getId()) {
+            } elseif (!is_null($parent->getUser()) && $parent->getUser()->getId() !== $this->getUser()->getId()) {
                 throw new BadRequestHttpException('Доступ запрещен.', 403);
             }
 
