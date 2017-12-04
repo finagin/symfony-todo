@@ -21,15 +21,29 @@ class TaskControllerTest extends WebTestCase
 
     public function testStore()
     {
-        $this->client->request('POST', '/api/tasks.json');
+        $i = 1;
+        $successResponse = '/\{"response":\{"id":(\d+)\}\}/';
 
-        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
+        $this->client->request('POST', '/api/tasks.json');
+        $this->assertEquals(401, $this->client->getResponse()
+            ->getStatusCode());
 
         $this->logIn();
 
-        $this->client->request('POST', '/api/tasks.json');
-
+        $this->client->request('POST', '/api/tasks.json', ['title' => 'Test #'.($i++)]);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp($successResponse, $this->client->getResponse()->getContent());
+
+        preg_match($successResponse, $this->client->getResponse()->getContent(), $matches);
+        $this->client->request('POST', '/api/tasks.json', ['title' => 'Test #'.($i++), 'parent' => $matches[1]]);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertRegExp('/\{"response":\{"id":\d+\}\}/', $this->client->getResponse()->getContent());
+
+        $this->client->request('POST', '/api/tasks.json', ['parent' => $matches[1]]);
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('POST', '/api/tasks.json', ['title' => 'Test #'.($i++), 'parent' => 1e6]);
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUpdate()
