@@ -20,8 +20,8 @@ class CreateUserCommandTest extends KernelTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
-            'login' => 'test_user',
-            'password' => 'test_user',
+            'login' => 'username',
+            'password' => 'pa$$word',
         ]);
 
         $output = $commandTester->getDisplay();
