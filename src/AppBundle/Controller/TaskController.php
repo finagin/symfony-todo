@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -11,6 +12,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TaskController extends FOSRestController
 {
@@ -152,15 +154,23 @@ class TaskController extends FOSRestController
      *   }
      * )
      *
-     * @Annotations\View()
-     *
      * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function showAction($id)
     {
-        return new JsonResponse(array('data' => 'Success!'));
+        $manager = $this->getDoctrine()->getManager();
+
+        $task = $manager->getRepository(Task::class)->find($id);
+
+        if (is_null($task)) {
+            throw new NotFoundHttpException('Task with id "'.$id.'" not found');
+        } elseif (!is_null($task->getUser()) && $task->getUser()->getId() !== $this->getUser()->getId()) {
+            throw new AccessDeniedHttpException('Доступ запрещен.');
+        }
+
+        return new JsonResponse(['response' => $task,]);
     }
 
     /**
