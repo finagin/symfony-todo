@@ -86,3 +86,5 @@ fos_rest:
             rss: false
     routing_loader:
         default_format: json
+
+nelmio_api_doc: ~
