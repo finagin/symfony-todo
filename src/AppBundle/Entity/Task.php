@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use JsonSerializable;
 use Serializable;
 
 /**
@@ -13,7 +14,7 @@ use Serializable;
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  * @Gedmo\Tree(type="nested")
  */
-class Task implements Serializable
+class Task implements Serializable, JsonSerializable
 {
     use TimestampableEntity;
 
@@ -116,20 +117,6 @@ class Task implements Serializable
     }
 
     /**
-     * Set lft.
-     *
-     * @param int $lft
-     *
-     * @return Task
-     */
-    public function setLft($lft)
-    {
-        $this->lft = $lft;
-
-        return $this;
-    }
-
-    /**
      * Get lft.
      *
      * @return int
@@ -140,20 +127,6 @@ class Task implements Serializable
     }
 
     /**
-     * Set lvl.
-     *
-     * @param int $lvl
-     *
-     * @return Task
-     */
-    public function setLvl($lvl)
-    {
-        $this->lvl = $lvl;
-
-        return $this;
-    }
-
-    /**
      * Get lvl.
      *
      * @return int
@@ -161,20 +134,6 @@ class Task implements Serializable
     public function getLvl()
     {
         return $this->lvl;
-    }
-
-    /**
-     * Set rgt.
-     *
-     * @param int $rgt
-     *
-     * @return Task
-     */
-    public function setRgt($rgt)
-    {
-        $this->rgt = $rgt;
-
-        return $this;
     }
 
     /**
@@ -209,20 +168,6 @@ class Task implements Serializable
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set root.
-     *
-     * @param \AppBundle\Entity\Task $root
-     *
-     * @return Task
-     */
-    public function setRoot(\AppBundle\Entity\Task $root = null)
-    {
-        $this->root = $root;
-
-        return $this;
     }
 
     /**
@@ -309,5 +254,28 @@ class Task implements Serializable
     public function unserialize($serialized)
     {
         list($this->id) = unserialize($serialized);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'parent_id' => is_null($this->getParent()) ? null : $this->getParent()->getId(),
+            'user_id' => is_null($this->getUser()) ? null : $this->getUser()->getId(),
+            'lft' => $this->getLft(),
+            'rgt' => $this->getRgt(),
+            'lvl' => $this->getLvl(),
+            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+            'updated_at' => $this->getUpdatedAt()->format('Y-m-d H:i:s'),
+        ];
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getId();
     }
 }
