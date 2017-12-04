@@ -2,10 +2,13 @@
 
 namespace AppBundle\Tests\Controller;
 
+use AppBundle\Entity\Task;
 use AppBundle\Tests\WebTestCase;
 
 class TaskControllerTest extends WebTestCase
 {
+    protected $task_number = 1;
+
     public function testIndex()
     {
         $this->client->request('GET', '/api/tasks.json');
@@ -75,14 +78,17 @@ class TaskControllerTest extends WebTestCase
     public function testShow()
     {
         $this->client->request('GET', '/api/tasks/1.json');
-
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
 
         $this->logIn();
 
-        $this->client->request('GET', '/api/tasks/1.json');
+        $tast = $this->createTask();
 
+        $this->client->request('GET', '/api/tasks/'.$tast.'.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/api/tasks/'.(1e6).'.json');
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDestroy()
@@ -96,5 +102,21 @@ class TaskControllerTest extends WebTestCase
         $this->client->request('DELETE', '/api/tasks/1.json');
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function createTask($parent_id = null)
+    {
+        $manager = $this->container->get('doctrine')->getManager();
+        $this->logIn();
+
+        $params = [
+            'title' => 'Test #'.($this->task_number++),
+            'parent' => $parent_id,
+        ];
+
+        $this->client->request('POST', '/api/tasks.json', $params);
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        return $manager->getRepository(Task::class)->find($response->response->id);
     }
 }

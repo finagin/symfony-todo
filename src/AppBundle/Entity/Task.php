@@ -272,4 +272,9 @@ class Task implements Serializable, \JsonSerializable
             'updated_at' => $this->getUpdatedAt()->format('Y-m-d H:i:s'),
         ];
     }
+
+    public function __toString()
+    {
+        return (string) $this->getId();
+    }
 }
