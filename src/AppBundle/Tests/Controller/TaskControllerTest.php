@@ -2,7 +2,6 @@
 
 namespace AppBundle\Tests\Controller;
 
-
 use AppBundle\Tests\WebTestCase;
 
 class TaskControllerTest extends WebTestCase

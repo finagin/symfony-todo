@@ -5,15 +5,10 @@ namespace AppBundle\Controller;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcherInterface;
-
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TaskController extends FOSRestController
 {
@@ -105,7 +100,7 @@ class TaskController extends FOSRestController
      *
      * @Annotations\View()
      *
-     * @param int $id
+     * @param int                   $id
      * @param ParamFetcherInterface $paramFetcher param fetcher service
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
@@ -170,5 +165,4 @@ class TaskController extends FOSRestController
     {
         return new JsonResponse(array('data' => 'Success!'));
     }
-
 }
