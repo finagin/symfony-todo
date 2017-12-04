@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
-use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -20,6 +19,8 @@ class TaskController extends FOSRestController
      *
      * @Route("tasks.json")
      * @Method("GET")
+     * @Annotations\QueryParam(name="offset", requirements="\d+", default="0", nullable=true, description="Offset from which to start listing notes.")
+     * @Annotations\QueryParam(name="limit", requirements="\d+", default="100", nullable=true, description="How many notes to return.")
      *
      * @ApiDoc(
      *   section = "Task",
@@ -31,22 +32,21 @@ class TaskController extends FOSRestController
      *   }
      * )
      *
-     * @Annotations\QueryParam(name="offset", requirements="\d+", default="0", nullable=true, description="Offset from which to start listing notes.")
-     * @Annotations\QueryParam(name="limit", requirements="\d+", default="100", nullable=true, description="How many notes to return.")
-     *
-     * @Annotations\View()
-     *
      * @param ParamFetcherInterface $paramFetcher param fetcher service
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function indexAction(ParamFetcherInterface $paramFetcher)
     {
+        $manager = $this->getDoctrine()->getManager();
+
         $offset = $paramFetcher->get('offset');
-        $start = null == $offset ? 0 : $offset + 1;
         $limit = $paramFetcher->get('limit');
 
-        return new JsonResponse(array('data' => 'Success!'));
+        $tasks = $manager->getRepository(Task::class)
+            ->findBy([], null, $limit, $offset);
+
+        return new JsonResponse(['response' => $tasks]);
     }
 
     /**
@@ -54,8 +54,8 @@ class TaskController extends FOSRestController
      *
      * @Route("tasks.json")
      * @Method("POST")
-     * @RequestParam(name="title", description="Название.")
-     * @RequestParam(name="parent", requirements="(\d+)", strict=false, nullable=false, description="Родительская задача.")
+     * @Annotations\RequestParam(name="title", description="Название.")
+     * @Annotations\RequestParam(name="parent", requirements="(\d+)", strict=false, nullable=false, description="Родительская задача.")
      *
      * @ApiDoc(
      *   section = "Task",

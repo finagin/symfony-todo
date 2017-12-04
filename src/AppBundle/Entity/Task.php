@@ -13,7 +13,7 @@ use Serializable;
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  * @Gedmo\Tree(type="nested")
  */
-class Task implements Serializable
+class Task implements Serializable, \JsonSerializable
 {
     use TimestampableEntity;
 
@@ -253,5 +253,23 @@ class Task implements Serializable
     public function unserialize($serialized)
     {
         list($this->id) = unserialize($serialized);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'parent_id' => is_null($this->getParent()) ? null : $this->getParent()->getId(),
+            'user_id' => is_null($this->getUser()) ? null : $this->getUser()->getId(),
+            'lft' => $this->getLft(),
+            'rgt' => $this->getRgt(),
+            'lvl' => $this->getLvl(),
+            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+            'updated_at' => $this->getUpdatedAt()->format('Y-m-d H:i:s'),
+        ];
     }
 }
