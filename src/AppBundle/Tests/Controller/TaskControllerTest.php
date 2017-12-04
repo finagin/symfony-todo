@@ -65,14 +65,28 @@ class TaskControllerTest extends WebTestCase
     public function testUpdate()
     {
         $this->client->request('PUT', '/api/tasks/1.json');
-
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
 
         $this->logIn();
 
-        $this->client->request('PUT', '/api/tasks/1.json');
+        $task_1 = $this->createTask();
+        $task_2 = $this->createTask($task_1->getId());
 
+        $this->client->request('PUT', '/api/tasks/'.$task_2.'.json', [
+            'title' => $task_2->getTitle(),
+            'parent' => null,
+        ]);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertNull($response->response->parent_id);
+
+        $this->client->request('PUT', '/api/tasks/'.$task_2.'.json', [
+            'title' => $task_2->getTitle(),
+            'parent' => $task_1->getId(),
+        ]);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertNotNull($response->response->parent_id);
     }
 
     public function testShow()
