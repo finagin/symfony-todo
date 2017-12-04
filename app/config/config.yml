@@ -76,3 +76,13 @@ stof_doctrine_extensions:
     orm:
         default:
             timestampable: true
+
+fos_rest:
+    param_fetcher_listener: true
+    view:
+        formats:
+            json: true
+            xml: false
+            rss: false
+    routing_loader:
+        default_format: json
