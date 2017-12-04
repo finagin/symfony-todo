@@ -107,6 +107,70 @@ class TaskController extends FOSRestController
     }
 
     /**
+     * Update task.
+     *
+     * @Route("tasks/{id}.json")
+     * @Method("PUT")
+     * @Annotations\RequestParam(name="title", description="Название.")
+     * @Annotations\RequestParam(name="parent", requirements="(\d+)", strict=false, nullable=false, description="Родительская задача.")
+     *
+     * @ApiDoc(
+     *   section = "Task",
+     *   resource = true,
+     *   statusCodes = {
+     *     200 = "Returned when successful.",
+     *     400 = "Некорректный запрос. Некорректные входные параметры.",
+     *     403 = "Доступ запрещен.",
+     *     404 = "Задание не найдено.",
+     *   }
+     * )
+     *
+     * @Annotations\View()
+     *
+     * @param int                   $id
+     * @param ParamFetcherInterface $paramFetcher param fetcher service
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function updateAction($id, ParamFetcherInterface $paramFetcher)
+    {
+        $manager = $this->getDoctrine()->getManager();
+
+        $title = $paramFetcher->get('title');
+        $parent = $paramFetcher->get('parent');
+
+        $task = $manager->getRepository(Task::class)->find($id);
+
+        if (is_null($task)) {
+            throw new BadRequestHttpException('Task with id "'.$id.'" not found', 404);
+        } elseif (!is_null($task->getUser()) && $task->getUser()->getId() !== $this->getUser()->getId()) {
+            throw new BadRequestHttpException('Доступ запрещен.', 403);
+        }
+
+        $task->setTitle($title);
+
+        if (!empty($parent)) {
+            $parent_id = $parent;
+            $parent = $manager->getRepository(Task::class)->find($parent_id);
+
+            if (is_null($parent)) {
+                throw new BadRequestHttpException('Parent with id "'.$parent_id.'" not found');
+            } elseif (!is_null($parent->getUser()) && $parent->getUser()->getId() !== $this->getUser()->getId()) {
+                throw new BadRequestHttpException('Доступ запрещен.', 403);
+            }
+
+            $task->setParent($parent);
+        } else {
+            $task->setParent(null);
+        }
+
+        $manager->persist($task);
+        $manager->flush();
+
+        return new JsonResponse(['response' => $task]);
+    }
+
+    /**
      * Get a single task.
      *
      * @Route("tasks/{id}.json")
