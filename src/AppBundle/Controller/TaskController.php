@@ -170,7 +170,7 @@ class TaskController extends FOSRestController
             throw new AccessDeniedHttpException('Доступ запрещен.');
         }
 
-        return new JsonResponse(['response' => $task,]);
+        return new JsonResponse(['response' => $task]);
     }
 
     /**
