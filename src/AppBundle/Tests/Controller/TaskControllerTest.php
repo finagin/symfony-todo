@@ -62,6 +62,22 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testShow()
+    {
+        $this->client->request('GET', '/api/tasks/1.json');
+        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
+
+        $this->logIn();
+
+        $tast = $this->createTask();
+
+        $this->client->request('GET', '/api/tasks/'.$tast.'.json');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/api/tasks/'.(1e6).'.json');
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+    }
+
     public function createTask($parent_id = null)
     {
         $manager = $this->container->get('doctrine')->getManager();
