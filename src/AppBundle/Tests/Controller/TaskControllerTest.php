@@ -9,14 +9,27 @@ class TaskControllerTest extends WebTestCase
     public function testIndex()
     {
         $this->client->request('GET', '/api/tasks.json');
-
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
 
         $this->logIn();
 
         $this->client->request('GET', '/api/tasks.json');
-
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $response = json_decode($this->client->getResponse()->getContent());
+        $n = count($response->response) - 1;
+        $this->client->request('GET', '/api/tasks.json', ['limit' => $n]);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals($n, count($response->response));
+
+        $second_id = $response->response[1]->id;
+        $this->client->request('GET', '/api/tasks.json', ['offset' => 1, 'limit' => $n]);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals($second_id, $response->response[0]->id);
     }
 
     public function testStore()
