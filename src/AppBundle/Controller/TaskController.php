@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use FOS\RestBundle\Controller\Annotations;
@@ -85,7 +84,7 @@ class TaskController extends FOSRestController
         $task = new Task();
         $task->setUser($this->getUser());
         $task->setTitle($title);
-        if (! empty($parent)) {
+        if (!empty($parent)) {
             $parent_id = $parent;
             $parent = $manager->getRepository(Task::class)
                 ->find($parent_id);
