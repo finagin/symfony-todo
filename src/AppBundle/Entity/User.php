@@ -39,7 +39,7 @@ class User implements AdvancedUserInterface, Serializable
     protected $tasks;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -158,9 +158,10 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * Add tasks
+     * Add tasks.
      *
      * @param \AppBundle\Entity\Task $tasks
+     *
      * @return User
      */
     public function addTask(\AppBundle\Entity\Task $tasks)
@@ -171,7 +172,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * Remove tasks
+     * Remove tasks.
      *
      * @param \AppBundle\Entity\Task $tasks
      */
@@ -181,7 +182,7 @@ class User implements AdvancedUserInterface, Serializable
     }
 
     /**
-     * Get tasks
+     * Get tasks.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

@@ -74,7 +74,7 @@ class Task implements Serializable
     private $children;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -82,9 +82,9 @@ class Task implements Serializable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -92,9 +92,10 @@ class Task implements Serializable
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
+     *
      * @return Task
      */
     public function setTitle($title)
@@ -105,7 +106,7 @@ class Task implements Serializable
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -115,9 +116,10 @@ class Task implements Serializable
     }
 
     /**
-     * Set lft
+     * Set lft.
      *
-     * @param integer $lft
+     * @param int $lft
+     *
      * @return Task
      */
     public function setLft($lft)
@@ -128,9 +130,9 @@ class Task implements Serializable
     }
 
     /**
-     * Get lft
+     * Get lft.
      *
-     * @return integer
+     * @return int
      */
     public function getLft()
     {
@@ -138,9 +140,10 @@ class Task implements Serializable
     }
 
     /**
-     * Set lvl
+     * Set lvl.
      *
-     * @param integer $lvl
+     * @param int $lvl
+     *
      * @return Task
      */
     public function setLvl($lvl)
@@ -151,9 +154,9 @@ class Task implements Serializable
     }
 
     /**
-     * Get lvl
+     * Get lvl.
      *
-     * @return integer
+     * @return int
      */
     public function getLvl()
     {
@@ -161,9 +164,10 @@ class Task implements Serializable
     }
 
     /**
-     * Set rgt
+     * Set rgt.
      *
-     * @param integer $rgt
+     * @param int $rgt
+     *
      * @return Task
      */
     public function setRgt($rgt)
@@ -174,9 +178,9 @@ class Task implements Serializable
     }
 
     /**
-     * Get rgt
+     * Get rgt.
      *
-     * @return integer
+     * @return int
      */
     public function getRgt()
     {
@@ -184,9 +188,10 @@ class Task implements Serializable
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param \AppBundle\Entity\User $user
+     *
      * @return Task
      */
     public function setUser(\AppBundle\Entity\User $user = null)
@@ -197,7 +202,7 @@ class Task implements Serializable
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return \AppBundle\Entity\User
      */
@@ -207,9 +212,10 @@ class Task implements Serializable
     }
 
     /**
-     * Set root
+     * Set root.
      *
      * @param \AppBundle\Entity\Task $root
+     *
      * @return Task
      */
     public function setRoot(\AppBundle\Entity\Task $root = null)
@@ -220,7 +226,7 @@ class Task implements Serializable
     }
 
     /**
-     * Get root
+     * Get root.
      *
      * @return \AppBundle\Entity\Task
      */
@@ -230,9 +236,10 @@ class Task implements Serializable
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param \AppBundle\Entity\Task $parent
+     *
      * @return Task
      */
     public function setParent(\AppBundle\Entity\Task $parent = null)
@@ -243,7 +250,7 @@ class Task implements Serializable
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return \AppBundle\Entity\Task
      */
@@ -253,9 +260,10 @@ class Task implements Serializable
     }
 
     /**
-     * Add children
+     * Add children.
      *
      * @param \AppBundle\Entity\Task $children
+     *
      * @return Task
      */
     public function addChild(\AppBundle\Entity\Task $children)
@@ -266,7 +274,7 @@ class Task implements Serializable
     }
 
     /**
-     * Remove children
+     * Remove children.
      *
      * @param \AppBundle\Entity\Task $children
      */
@@ -276,7 +284,7 @@ class Task implements Serializable
     }
 
     /**
-     * Get children
+     * Get children.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -284,7 +292,6 @@ class Task implements Serializable
     {
         return $this->children;
     }
-
 
     /**
      * {@inheritdoc}
@@ -301,6 +308,6 @@ class Task implements Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->id,) = unserialize($serialized);
+        list($this->id) = unserialize($serialized);
     }
 }
