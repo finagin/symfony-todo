@@ -3,6 +3,7 @@
 namespace AppBundle\Tests\Controller;
 
 use AppBundle\Entity\Task;
+use AppBundle\Entity\User;
 use AppBundle\Tests\WebTestCase;
 
 class TaskControllerTest extends WebTestCase
@@ -103,6 +104,46 @@ class TaskControllerTest extends WebTestCase
 
         $this->client->request('GET', '/api/tasks/'.(1e6).'.json');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testDestroy()
+    {
+        $this->client->request('DELETE', '/api/tasks/1.json');
+        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
+
+        $this->logIn();
+
+        $task = $this->createTask();
+
+        $this->client->request('DELETE', '/api/tasks/'.$task.'.json');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('DELETE', '/api/tasks/'.(1e6).'.json');
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+
+        $manager = $this->container->get('doctrine')->getManager();
+
+        $username = 'other_username';
+        $user = $manager->getRepository(User::class)
+            ->findOneByUsername($username);
+
+        if (is_null($user)) {
+            $user = new User();
+            $user->setUsername($username);
+        }
+
+        $user->setPassword('other_password');
+        $manager->persist($user);
+        $manager->flush();
+
+        $task = new Task();
+        $task->setTitle('Test #'.($this->task_number++));
+        $task->setUser($user);
+        $manager->persist($task);
+        $manager->flush();
+
+        $this->client->request('DELETE', '/api/tasks/'.$task.'.json');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function createTask($parent_id = null)

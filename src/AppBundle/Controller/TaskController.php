@@ -205,4 +205,45 @@ class TaskController extends FOSRestController
 
         return new JsonResponse(['response' => $task]);
     }
+
+    /**
+     * Delete task.
+     *
+     * @Route("tasks/{id}.json")
+     * @Method("DELETE")
+     *
+     * @ApiDoc(
+     *   section = "Task",
+     *   resource = true,
+     *   statusCodes = {
+     *     200 = "Returned when successful.",
+     *     400 = "Некорректный запрос. Некорректные входные параметры.",
+     *     403 = "Доступ запрещен.",
+     *     404 = "Задание не найдено.",
+     *   }
+     * )
+     *
+     * @Annotations\View()
+     *
+     * @param int $id
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function destroyAction($id)
+    {
+        $manager = $this->getDoctrine()->getManager();
+
+        $task = $manager->getRepository(Task::class)->find($id);
+
+        if (is_null($task)) {
+            throw new NotFoundHttpException('Task with id "'.$id.'" not found');
+        } elseif (!is_null($task->getUser()) && $task->getUser()->getId() !== $this->getUser()->getId()) {
+            throw new AccessDeniedHttpException('Доступ запрещен.');
+        }
+
+        $manager->remove($task);
+        $manager->flush();
+
+        return new JsonResponse(array('data' => 'Success!'));
+    }
 }
