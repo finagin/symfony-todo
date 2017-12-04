@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Serializable;
@@ -31,6 +32,19 @@ class User implements AdvancedUserInterface, Serializable
      * @ORM\Column(type="string", length=64)
      */
     private $password;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="user")
+     */
+    protected $tasks;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -141,6 +155,40 @@ class User implements AdvancedUserInterface, Serializable
     public function isEnabled()
     {
         return true;
+    }
+
+    /**
+     * Add tasks.
+     *
+     * @param \AppBundle\Entity\Task $tasks
+     *
+     * @return User
+     */
+    public function addTask(\AppBundle\Entity\Task $tasks)
+    {
+        $this->tasks[] = $tasks;
+
+        return $this;
+    }
+
+    /**
+     * Remove tasks.
+     *
+     * @param \AppBundle\Entity\Task $tasks
+     */
+    public function removeTask(\AppBundle\Entity\Task $tasks)
+    {
+        $this->tasks->removeElement($tasks);
+    }
+
+    /**
+     * Get tasks.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
     }
 
     /**
